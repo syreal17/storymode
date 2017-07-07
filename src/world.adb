@@ -52,4 +52,14 @@ package body world is
       return blank_room;
    end Get_Room;
    
+   procedure Update_Room(L : in out level.Level; D : Dungeon_Room) is
+   begin
+      for J in 1 .. L.Current_Rooms_Count loop
+         if L.Current_Rooms(J).ID = D.ID then
+            L.Current_Rooms(J) := D;
+            exit;
+         end if;
+      end loop;
+   end Update_Room;
+   
 end world;

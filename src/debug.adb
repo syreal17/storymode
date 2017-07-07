@@ -3,8 +3,8 @@ package body debug is
    procedure Print_Char_Codes ( S : String ) is
    begin
       for C of S loop
-         --Put( Integer'Image(Character'Pos(C)) & " ");
-         Put(C);
+         Put( Integer'Image(Character'Pos(C)) & " ");
+         --Put(C);
       end loop;
       Put_Line("");
    end;

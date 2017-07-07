@@ -15,24 +15,25 @@ package body interpreter is
       end if;
    end;
    
-   procedure Open_Door(L : level.Level; X : Positive; Y : Positive) is
+   procedure Open_Door(L : in out level.Level; X : Positive; Y : Positive) is
       D : Dungeon_Room;
       Room_X : Positive;
       Room_Y : Positive;
    begin
-   --TODO: create function for getting room relative x,y
+   --TODO: create generic function for getting room relative x,y (screen relative too)
       D := Get_Room(L, X, Y);
       Room_X := X - D.X_Position + 1;
       Room_Y := Y - D.Y_Position + 1;
       D.Board(Room_X, Room_Y) := O;
-      Print_Board(D);
+      --Print_Board(D);
+      Update_Room(L, D);
    end Open_Door;
    
    --TODO: move not based on display tile, but underlying abstract tile
    procedure Move_Up(L : in out level.Level) is
    begin
       if L.Current_Player.Y_Position > 1 then
-         if Get_Tile(L, L.Current_Player.X_Position, L.Current_Player.Y_Position - 1) = display_tiles(F) then
+         if Get_Tile(L, L.Current_Player.X_Position, L.Current_Player.Y_Position - 1) = abbr_tiles(Floor) then
             L.Current_Player.X_Position := L.Current_Player.Y_Position - 1;
          end if;
       end if;
@@ -41,7 +42,7 @@ package body interpreter is
    procedure Move_Down(L : in out level.Level) is
    begin
       if L.Current_Player.Y_Position < L.Current_Dungeon.Y_Length then
-         if Get_Tile(L, L.Current_Player.X_Position, L.Current_Player.Y_Position + 1) = display_tiles(F) then
+         if Get_Tile(L, L.Current_Player.X_Position, L.Current_Player.Y_Position + 1) = abbr_tiles(Floor) then
             L.Current_Player.X_Position := L.Current_Player.Y_Position + 1;
          end if;
       end if;
@@ -50,7 +51,7 @@ package body interpreter is
    procedure Move_Left(L : in out level.Level) is
    begin
       if L.Current_Player.X_Position > 1 then
-         if Get_Tile(L, L.Current_Player.X_Position -1, L.Current_Player.Y_Position) = display_tiles(F) then
+         if Get_Tile(L, L.Current_Player.X_Position -1, L.Current_Player.Y_Position) = abbr_tiles(Floor) then
             L.Current_Player.X_Position := L.Current_Player.X_Position - 1;
          end if;
          --Put_Line("move left");
@@ -60,10 +61,9 @@ package body interpreter is
    procedure Move_Right(L : in out level.Level) is
    begin
       if L.Current_Player.X_Position < L.Current_Dungeon.X_Length then
-         if Get_Tile(L, L.Current_Player.X_Position + 1, L.Current_Player.Y_Position) = display_tiles(F) then
+         if Get_Tile(L, L.Current_Player.X_Position + 1, L.Current_Player.Y_Position) = abbr_tiles(Floor) then
             L.Current_Player.X_Position := L.Current_Player.X_Position + 1;
-         elsif Get_Tile(L, L.Current_Player.X_Position + 1, L.Current_Player.Y_Position) = display_tiles(D) then
-            Put_Line("Here");
+         elsif Get_Tile(L, L.Current_Player.X_Position + 1, L.Current_Player.Y_Position) = abbr_tiles(Closed_Door) then
             Open_Door(L, L.Current_Player.X_Position + 1, L.Current_Player.Y_Position);
          end if;
       end if;

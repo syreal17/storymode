@@ -57,9 +57,10 @@ procedure Main is
       end loop;
    end;
 
-   L : level.Level;
-   S : String (1 .. Screen_X_Length) := (NUL, others=>NUL);
-   N : Natural;
+   L      : level.Level;
+   S      : String (1 .. Screen_X_Length) := (NUL, others=>NUL);
+   N      : Natural;
+   S_last : String (1 .. Screen_X_Length) := (NUL, others=>NUL);
 begin
    Load_Dungeon(entry_level, L);
 
@@ -70,6 +71,13 @@ begin
       --Put_Line(Positive'Image(L.Current_Player.X_Position));
       Render(L);
       Get_Line(S, N);
+      --Put_Line(Natural'Image(N));
+      if N = 0 then
+         S := S_last;
+      end if;
       Interpret(L, S);
+      if N = 1 then
+         S_last := S;
+      end if;
    end loop;
 end Main;

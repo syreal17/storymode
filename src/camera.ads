@@ -8,6 +8,6 @@ with world; use world;
 package camera is
    
    procedure Render (L : level.Level);
-   function Get_Tile (L : level.Level; X : Positive; Y : Positive) return Character;
+   function Get_Tile (L : level.Level; X : Positive; Y : Positive) return Tile;
 
 end camera;

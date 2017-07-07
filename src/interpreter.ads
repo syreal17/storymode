@@ -7,6 +7,7 @@ with level; use level;
 with debug; use debug;
 with camera; use camera;
 with world; use world;
+with identifier; use identifier;
 
 package interpreter is
    
