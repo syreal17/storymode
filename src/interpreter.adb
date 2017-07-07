@@ -1,6 +1,6 @@
 package body interpreter is
 
-   procedure Interpret (L : in out level.Level; S : String) is
+   function Interpret (L : in out level.Level; S : String) return Boolean is
    begin
       --Print_Char_Codes(S);
       if S = com_a then
@@ -12,7 +12,10 @@ package body interpreter is
          Move_Up(L);
       elsif S = com_s then
          Move_Down(L);
+      elsif S = com_q then
+         return False;
       end if;
+      return True;
    end;
    
    procedure Discover(L : in out level.Level; X : Positive; Y : Positive; Old_D : Dungeon_Room) is

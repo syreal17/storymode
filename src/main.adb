@@ -61,13 +61,14 @@ procedure Main is
    S      : String (1 .. Screen_X_Length) := (NUL, others=>NUL);
    N      : Natural;
    S_last : String (1 .. Screen_X_Length) := (NUL, others=>NUL);
+   Cont   : Boolean := True;
 begin
    Load_Dungeon(entry_level, L);
 
    --put_line(Boolean'Image(Is_Room(L, 35, 3)));
    --Put_Line(Positive'Image(L.Current_Rooms_Count));
 
-   loop
+   while Cont loop
       --Put_Line(Positive'Image(L.Current_Player.X_Position));
       Render(L);
       Get_Line(S, N);
@@ -75,7 +76,7 @@ begin
       if N = 0 then
          S := S_last;
       end if;
-      Interpret(L, S);
+      Cont := Interpret(L, S);
       if N = 1 then
          S_last := S;
       end if;

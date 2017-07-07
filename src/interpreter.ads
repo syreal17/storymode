@@ -18,9 +18,11 @@ package interpreter is
    com_w : String(1 .. Screen_X_Length) :=
      (LC_W, others=>NUL);
    com_s : String(1 .. Screen_X_Length) :=
-     (LC_S, others=>NUL);  
+     (LC_S, others=>NUL);
+   com_q : String(1 .. Screen_X_Length) :=
+     (LC_Q, others=>NUL);
   
-   procedure Interpret (L : in out level.Level; S : String);
+   function Interpret (L : in out level.Level; S : String) return Boolean;
   
    procedure Move_Up(L : in out level.Level);
    procedure Move_Down(L : in out level.Level);
