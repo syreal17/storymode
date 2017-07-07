@@ -31,27 +31,33 @@ package body interpreter is
    
    --TODO: move not based on display tile, but underlying abstract tile
    procedure Move_Up(L : in out level.Level) is
+      Up_T : Tile := Get_Tile(L, L.Current_Player.X_Position, L.Current_Player.Y_Position - 1);
    begin
       if L.Current_Player.Y_Position > 1 then
-         if Get_Tile(L, L.Current_Player.X_Position, L.Current_Player.Y_Position - 1) = abbr_tiles(Floor) then
+         if Up_T = abbr_tiles(Floor) or 
+          Up_T = abbr_tiles(Open_Door) then
             L.Current_Player.X_Position := L.Current_Player.Y_Position - 1;
          end if;
       end if;
    end Move_Up;
    
    procedure Move_Down(L : in out level.Level) is
+      Down_T : Tile := Get_Tile(L, L.Current_Player.X_Position, L.Current_Player.Y_Position + 1);
    begin
       if L.Current_Player.Y_Position < L.Current_Dungeon.Y_Length then
-         if Get_Tile(L, L.Current_Player.X_Position, L.Current_Player.Y_Position + 1) = abbr_tiles(Floor) then
+         if Down_T = abbr_tiles(Floor) or 
+          Down_T = abbr_tiles(Open_Door) then
             L.Current_Player.X_Position := L.Current_Player.Y_Position + 1;
          end if;
       end if;
    end Move_Down;
    
    procedure Move_Left(L : in out level.Level) is
+      Left_T : Tile := Get_Tile(L, L.Current_Player.X_Position -1, L.Current_Player.Y_Position);
    begin
       if L.Current_Player.X_Position > 1 then
-         if Get_Tile(L, L.Current_Player.X_Position -1, L.Current_Player.Y_Position) = abbr_tiles(Floor) then
+         if Left_T = abbr_tiles(Floor) or
+          Left_T = abbr_tiles(Open_Door) then
             L.Current_Player.X_Position := L.Current_Player.X_Position - 1;
          end if;
          --Put_Line("move left");
@@ -59,11 +65,13 @@ package body interpreter is
    end Move_Left;
    
    procedure Move_Right(L : in out level.Level) is
+      Right_T : Tile := Get_Tile(L, L.Current_Player.X_Position + 1, L.Current_Player.Y_Position);
    begin
       if L.Current_Player.X_Position < L.Current_Dungeon.X_Length then
-         if Get_Tile(L, L.Current_Player.X_Position + 1, L.Current_Player.Y_Position) = abbr_tiles(Floor) then
+         if Right_T = abbr_tiles(Floor) or
+          Right_T = abbr_tiles(Open_Door) then
             L.Current_Player.X_Position := L.Current_Player.X_Position + 1;
-         elsif Get_Tile(L, L.Current_Player.X_Position + 1, L.Current_Player.Y_Position) = abbr_tiles(Closed_Door) then
+         elsif Right_T = abbr_tiles(Closed_Door) then
             Open_Door(L, L.Current_Player.X_Position + 1, L.Current_Player.Y_Position);
          end if;
       end if;
