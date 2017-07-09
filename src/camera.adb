@@ -1,26 +1,27 @@
 package body camera is
 
-   procedure Render (L : level.Level) is
+   procedure Render (L : in out level.Level) is
       Screen_X_min : Positive := L.Current_Screen.X_Position;
       Screen_X_max : Positive := Screen_X_min + L.Current_Screen.X_Length;
       Screen_Y_min : Positive := L.Current_Screen.Y_Position;
       Screen_Y_max : Positive := Screen_Y_min + L.Current_Screen.Y_Length;
-      --Screen       : String(1 .. (L.Current_Screen.X_Length + 2)*L.Current_Screen.Y_Length);
-      --TODO: comment, make more readable
-      Screen       : String(1 .. (Screen_X_max - Screen_X_min + 1 + 1) * (Screen_Y_max - Screen_Y_min + 1) );
+      Screen       : String(1 .. Full_Screen_Amt );
       J            : Positive := 1;
+      Print_Message: Boolean := True;
    begin
-   
-   --Put_Line(Positive'Image(Screen_X_min));
-   --Put_Line(Positive'Image(Screen_X_max));
-   --Put_Line(Positive'Image(Screen_Y_min));
-   --Put_Line(Positive'Image(Screen_Y_max)); 
    
       for Y in Screen_Y_min .. Screen_Y_max loop
          for X in Screen_X_min .. Screen_X_max loop
-            --Put(Get_Tile(L, X, Y));          
-            --Put(Positive'Image(J));
-            Screen(J) := display_tiles(Get_Tile(L, X, Y));
+            if L.Current_Screen.Message(J) = NUL then
+               Print_Message := False;
+            end if;
+            
+            if Print_Message then
+               Screen(J) := L.Current_Screen.Message(J);
+               L.Current_Screen.Message(J) := NUL;
+            else
+               Screen(J) := display_tiles(Get_Tile(L, X, Y));
+            end if;
             J := J + 1;
          end loop;
          --Put_Line("");
@@ -54,5 +55,11 @@ package body camera is
       end if;
       return abbr_tiles(Nothing);
    end Get_Tile;
+   
+   --function Get_Render_Message(S : String) return String(1 .. (Screen_X_Length + 1) * (Screen_Y_Length + 1) ) is
+   --begin
+   --   for C of S loop:
+   --      
+   --end Get_Render_Message;
    
 end camera;

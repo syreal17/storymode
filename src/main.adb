@@ -30,14 +30,18 @@ procedure Main is
                if I = PLAYER_a then
                   P :=
                     (X_Position => X,
-                     Y_Position => Y);
+                     Y_Position => Y,
+                     XP         => 1,
+                     HP         => 13);
                   L.Current_Player := P;
                elsif I = SCREEN_a then
                   S :=
                     (X_Position => X,
                      Y_Position => Y,
                      X_Length   => Screen_X_Length,
-                     Y_Length   => Screen_Y_Length);
+                     Y_Length   => Screen_Y_Length,
+                     Message    => (NUL, others=>NUL)
+                     );
                   L.Current_Screen := S;
                elsif identifier.Identifier'Pos(I) <= identifier.Identifier'Pos(RM100001) then
                   for R of all_rooms loop
@@ -65,6 +69,7 @@ procedure Main is
 begin
    Load_Dungeon(entry_level, L);
 
+   L.Current_Screen.Message := "Hello Sailor! Welcome to the Pits." & (35 .. Full_Screen_Amt => NUL);
    --put_line(Boolean'Image(Is_Room(L, 35, 3)));
    --Put_Line(Positive'Image(L.Current_Rooms_Count));
 

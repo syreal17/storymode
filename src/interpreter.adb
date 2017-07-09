@@ -23,8 +23,9 @@ package body interpreter is
    begin
       if Is_Room(L, X, Y) then
          New_D := Get_Room(L, X, Y);
-         if Old_D.ID /= New_D.ID then
+         if Old_D.ID /= New_D.ID and New_D.Discovered = False then
             New_D.Discovered := True;
+            L.Current_Player.XP = L.Current_Player.XP + New_D.XP;
             Update_Room(L, New_D);
          end if;
       end if;
