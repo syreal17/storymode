@@ -25,7 +25,7 @@ package body interpreter is
          New_D := Get_Room(L, X, Y);
          if Old_D.ID /= New_D.ID and New_D.Discovered = False then
             New_D.Discovered := True;
-            L.Current_Player.XP = L.Current_Player.XP + New_D.XP;
+            L.Current_Player.XP := L.Current_Player.XP + New_D.XP;
             Update_Room(L, New_D);
          end if;
       end if;
@@ -56,6 +56,17 @@ package body interpreter is
       Try_Discovery_Cardinal(L, X, Y);
    end Open_Door;
    
+   procedure Check_Trigger(L : in out level.Level; X : Positive; Y : Positive) is
+   begin
+      if L.Current_Triggers_Count > 0 then
+         for T of L.Current_Triggers loop
+            if T.X_Position = X and T.Y_Position = Y then
+               L.Current_Screen.Message := T.Message;
+            end if;
+         end loop;
+      end if;
+   end Check_Trigger;
+   
    --TODO: move not based on display tile, but underlying abstract tile
    procedure Move_Up(L : in out level.Level) is
       Up_T : Tile := Get_Tile(L, L.Current_Player.X_Position, L.Current_Player.Y_Position - 1);
@@ -64,6 +75,7 @@ package body interpreter is
          if Up_T = abbr_tiles(Floor) or 
           Up_T = abbr_tiles(Open_Door) then
             L.Current_Player.Y_Position := L.Current_Player.Y_Position - 1;
+            Check_Trigger(L, L.Current_Player.X_Position, L.Current_Player.Y_Position);
          elsif Up_T = abbr_tiles(Closed_Door) or
           Up_T = abbr_tiles(Secret_Door) then
             Open_Door(L, L.Current_Player.X_Position, L.Current_Player.Y_Position - 1);   
@@ -78,6 +90,7 @@ package body interpreter is
          if Down_T = abbr_tiles(Floor) or 
           Down_T = abbr_tiles(Open_Door) then
             L.Current_Player.Y_Position := L.Current_Player.Y_Position + 1;
+            Check_Trigger(L, L.Current_Player.X_Position, L.Current_Player.Y_Position);
          elsif Down_T = abbr_tiles(Closed_Door) or
           Down_T = abbr_tiles(Secret_Door) then
             Open_Door(L, L.Current_Player.X_Position, L.Current_Player.Y_Position + 1);   
@@ -92,6 +105,7 @@ package body interpreter is
          if Left_T = abbr_tiles(Floor) or
           Left_T = abbr_tiles(Open_Door) then
             L.Current_Player.X_Position := L.Current_Player.X_Position - 1;
+            Check_Trigger(L, L.Current_Player.X_Position, L.Current_Player.Y_Position);
          elsif Left_T = abbr_tiles(Closed_Door) or
           Left_T = abbr_tiles(Secret_Door) then
             Open_Door(L, L.Current_Player.X_Position - 1, L.Current_Player.Y_Position);
@@ -107,6 +121,7 @@ package body interpreter is
          if Right_T = abbr_tiles(Floor) or
           Right_T = abbr_tiles(Open_Door) then
             L.Current_Player.X_Position := L.Current_Player.X_Position + 1;
+            Check_Trigger(L, L.Current_Player.X_Position, L.Current_Player.Y_Position);
          elsif Right_T = abbr_tiles(Closed_Door) or
           Right_T = abbr_tiles(Secret_Door) then
             Open_Door(L, L.Current_Player.X_Position + 1, L.Current_Player.Y_Position);

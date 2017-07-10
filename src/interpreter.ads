@@ -8,6 +8,7 @@ with debug; use debug;
 with camera; use camera;
 with world; use world;
 with identifier; use identifier;
+with trigger; use trigger;
 
 package interpreter is
    

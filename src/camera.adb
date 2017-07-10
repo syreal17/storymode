@@ -7,22 +7,24 @@ package body camera is
       Screen_Y_max : Positive := Screen_Y_min + L.Current_Screen.Y_Length;
       Screen       : String(1 .. Full_Screen_Amt );
       J            : Positive := 1;
+      I            : Positive := 1;
       Print_Message: Boolean := True;
    begin
    
       for Y in Screen_Y_min .. Screen_Y_max loop
          for X in Screen_X_min .. Screen_X_max loop
-            if L.Current_Screen.Message(J) = NUL then
+            if L.Current_Screen.Message(I) = NUL then
                Print_Message := False;
             end if;
             
             if Print_Message then
-               Screen(J) := L.Current_Screen.Message(J);
-               L.Current_Screen.Message(J) := NUL;
+               Screen(J) := L.Current_Screen.Message(I);
+               L.Current_Screen.Message(I) := NUL;
             else
                Screen(J) := display_tiles(Get_Tile(L, X, Y));
             end if;
             J := J + 1;
+            I := I + 1;
          end loop;
          --Put_Line("");
          Screen(J) := LF;

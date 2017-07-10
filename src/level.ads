@@ -1,6 +1,7 @@
 with dungeon; use dungeon;
 with screen; use screen;
 with player; use player;
+with trigger; use trigger;
 
 package level is
 
@@ -10,6 +11,8 @@ package level is
       Current_Player      : player.Player;
       Current_Rooms       : Rooms;
       Current_Rooms_Count : Positive;
+      Current_Triggers    : Triggers;
+      Current_Triggers_Count: Natural;
    end record; 
 
 end level;
