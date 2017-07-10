@@ -1,5 +1,5 @@
 with Ada.Text_IO; use Ada.Text_IO;
-with dungeon; use dungeon;
+with dngn; use dngn;
 
 package debug is
 

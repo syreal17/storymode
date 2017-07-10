@@ -1,14 +1,14 @@
 with Ada.Characters.Latin_1; use Ada.Characters.Latin_1;
 with Ada.Text_IO; use Ada.Text_IO;
 
-with dungeon; use dungeon;
-with screen; use screen;
-with level; use level;
+with dngn; use dngn;
+with scrn; use scrn;
+with lvl; use lvl;
 with debug; use debug;
 with camera; use camera;
 with world; use world;
-with identifier; use identifier;
-with trigger; use trigger;
+with id; use id;
+with trgr; use trgr;
 
 package interpreter is
    
@@ -22,12 +22,16 @@ package interpreter is
      (LC_S, others=>NUL);
    com_q : String(1 .. Screen_X_Length) :=
      (LC_Q, others=>NUL);
+   com_y : String(1 .. Screen_X_Length) :=
+     (LC_Y, others=>NUL);
+   com_n : String(1 .. Screen_X_Length) :=
+     (LC_N, others=>NUL);
   
-   function Interpret (L : in out level.Level; S : String) return Boolean;
+   function Interpret (L : in out Level; S : String; IT : Input_Type) return Boolean;
   
-   procedure Move_Up(L : in out level.Level);
-   procedure Move_Down(L : in out level.Level);
-   procedure Move_Left(L : in out level.Level);
-   procedure Move_Right(L : in out level.Level);
+   procedure Move_Up(L : in out Level);
+   procedure Move_Down(L : in out Level);
+   procedure Move_Left(L : in out Level);
+   procedure Move_Right(L : in out Level);
 
 end interpreter;

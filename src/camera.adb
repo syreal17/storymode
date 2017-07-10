@@ -1,6 +1,6 @@
 package body camera is
 
-   procedure Render (L : in out level.Level) is
+   function Render (L : in out Level) return Input_Type is
       Screen_X_min : Positive := L.Current_Screen.X_Position;
       Screen_X_max : Positive := Screen_X_min + L.Current_Screen.X_Length;
       Screen_Y_min : Positive := L.Current_Screen.Y_Position;
@@ -19,28 +19,36 @@ package body camera is
             
             if Print_Message then
                Screen(J) := L.Current_Screen.Message(I);
-               L.Current_Screen.Message(I) := NUL;
+               --L.Current_Screen.Message(I) := NUL;
+               I := I + 1;
             else
                Screen(J) := display_tiles(Get_Tile(L, X, Y));
             end if;
             J := J + 1;
-            I := I + 1;
          end loop;
          --Put_Line("");
          Screen(J) := LF;
          J := J + 1;
       end loop;
       Put(Screen);
+      if I >= 2 then
+         Put("Continue (y/n)? ");
+         return Continue_Text;
+      else
+         Put("Action: ");
+         return Dungeon_Action;
+      end if;
+      
    end;
    
-   function Get_Tile (L : level.Level; X : Positive; Y : Positive) return Tile is
+   function Get_Tile (L : Level; X : Positive; Y : Positive) return Tile is
       R       : Dungeon_Room;
       T       : Tile;
       R_rel_X : Positive;
       R_rel_Y : Positive;
    begin
       if Is_Player(L, X, Y) then
-         return abbr_tiles(Player);
+         return abbr_tiles(Player_Tile);
       elsif Is_Room(L, X, Y) then
          --return '.';
          R := Get_Room(L, X, Y);

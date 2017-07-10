@@ -1,6 +1,6 @@
 package body world is
 
-   function Is_Player (L : level.Level; X : Positive; Y : Positive) return Boolean is
+   function Is_Player (L : Level; X : Positive; Y : Positive) return Boolean is
    begin
       if L.Current_Player.X_Position = X and L.Current_Player.Y_Position = Y then
          return True;
@@ -9,7 +9,7 @@ package body world is
       end if;
    end Is_Player;
 
-   function Is_Room (L : level.Level; X : Positive; Y : Positive) return Boolean is
+   function Is_Room (L : Level; X : Positive; Y : Positive) return Boolean is
       R : Dungeon_Room;
       R_X_min : Positive;
       R_X_max : Positive;
@@ -31,7 +31,7 @@ package body world is
       return False;
    end Is_Room;
 
-   function Get_Room(L : level.Level; X : Positive; Y : Positive) return Dungeon_Room is
+   function Get_Room(L : Level; X : Positive; Y : Positive) return Dungeon_Room is
       R : Dungeon_Room;
       R_X_min : Positive;
       R_X_max : Positive;
@@ -52,7 +52,7 @@ package body world is
       return blank_room;
    end Get_Room;
    
-   procedure Update_Room(L : in out level.Level; D : Dungeon_Room) is
+   procedure Update_Room(L : in out Level; D : Dungeon_Room) is
    begin
       for J in 1 .. L.Current_Rooms_Count loop
          if L.Current_Rooms(J).ID = D.ID then
