@@ -77,95 +77,61 @@ package body interpreter is
    
    procedure Player_Attack(L : in out Level; X : Positive; Y : Positive) is
       M_I : Positive;
+      M : Monster;
    begin
       M_I := Get_Monster_Index(L, X, Y);
-      L.Current_Monsters (M_I).HP := L.Current_Monsters (M_I).HP - Integer'Max(L.Current_Player.PHYSICALITY - L.Current_Monsters(M_I).Armor, 0);
+      M := L.Current_Monsters(M_I);
+      L.Current_Monsters (M_I).HP := M.HP - Integer'Max(L.Current_Player.PHYSICALITY - M.Armor, 0);
       if L.Current_Monsters (M_I).HP <= 0 then
+         L.Current_Screen.Message := "You slay the " & Get_Monster_Name_Str(M) & "!" & (14 + M.Name_length + 1 .. Full_Screen_Amt => NUL);
          L.Current_Monsters (M_I).Alive := False;
          L.Current_Player.XP := L.Current_Player.XP + L.Current_Monsters (M_I).XP_Reward;
       end if;
    end Player_Attack;
    
-   --TODO: move not based on display tile, but underlying abstract tile
-   procedure Move_North(L : in out Level) is
-      Up_T : Tile := Get_Tile(L, L.Current_Player.X_Position, L.Current_Player.Y_Position - 1);
+   procedure Move (L : in out Level; X_Vec : Integer; Y_Vec : Integer) is
+      New_X : Positive := L.Current_Player.X_Position + X_Vec;
+      New_Y : Positive := L.Current_Player.Y_Position + Y_Vec;
+      T_New : Tile := Get_Tile(L, New_X, New_Y);
    begin
-      if L.Current_Player.Y_Position > 1 then
-         if Up_T = abbr_tiles(Floor) or 
-          Up_T = abbr_tiles(Open_Door) then
-            L.Current_Player.Y_Position := L.Current_Player.Y_Position - 1;
+      if L.Current_Player.Y_Position > 1 and L.Current_Player.X_Position > 1 and
+       L.Current_Player.Y_Position < L.Current_Dungeon.Y_Length and
+       L.Current_Player.X_Position < L.Current_Dungeon.X_Length then
+         if T_New = abbr_tiles(Floor) or 
+          T_New = abbr_tiles(Open_Door) then
+            L.Current_Player.Y_Position := New_Y;
+            L.Current_Player.X_Position := New_X;
             Check_Trigger(L, L.Current_Player.X_Position, L.Current_Player.Y_Position);
             Update_Screen(L);
-         elsif Up_T = abbr_tiles(Closed_Door) or
-          Up_T = abbr_tiles(Secret_Door) then
-            Open_Door(L, L.Current_Player.X_Position, L.Current_Player.Y_Position - 1);
-         elsif Up_T = abbr_tiles(Monster_Tile) then
-            Player_Attack(L, L.Current_Player.X_Position, L.Current_Player.Y_Position - 1);
+         elsif T_New = abbr_tiles(Closed_Door) or
+          T_New = abbr_tiles(Secret_Door) then
+            Open_Door(L, New_X, New_Y);
+         elsif T_New = abbr_tiles(Monster_Tile) then
+            Player_Attack(L, New_X, New_Y);
          end if;
       end if;
-   end Move_North;
-   
-   procedure Move_South(L : in out Level) is
-      Down_T : Tile := Get_Tile(L, L.Current_Player.X_Position, L.Current_Player.Y_Position + 1);
-   begin
-      if L.Current_Player.Y_Position < L.Current_Dungeon.Y_Length then
-         if Down_T = abbr_tiles(Floor) or 
-          Down_T = abbr_tiles(Open_Door) then
-            L.Current_Player.Y_Position := L.Current_Player.Y_Position + 1;
-            Check_Trigger(L, L.Current_Player.X_Position, L.Current_Player.Y_Position);
-            Update_Screen(L);
-         elsif Down_T = abbr_tiles(Closed_Door) or
-          Down_T = abbr_tiles(Secret_Door) then
-            Open_Door(L, L.Current_Player.X_Position, L.Current_Player.Y_Position + 1);   
-         end if;
-      end if;
-   end Move_South;
-   
-   procedure Move_West(L : in out Level) is
-      Left_T : Tile := Get_Tile(L, L.Current_Player.X_Position -1, L.Current_Player.Y_Position);
-   begin
-      if L.Current_Player.X_Position > 1 then
-         if Left_T = abbr_tiles(Floor) or
-          Left_T = abbr_tiles(Open_Door) then
-            L.Current_Player.X_Position := L.Current_Player.X_Position - 1;
-            Check_Trigger(L, L.Current_Player.X_Position, L.Current_Player.Y_Position);
-            Update_Screen(L);
-         elsif Left_T = abbr_tiles(Closed_Door) or
-          Left_T = abbr_tiles(Secret_Door) then
-            Open_Door(L, L.Current_Player.X_Position - 1, L.Current_Player.Y_Position);
-         end if;
-         --Put_Line("move left");
-      end if;
-   end Move_West;
-   
-   procedure Move_East(L : in out Level) is
-      Right_T : Tile := Get_Tile(L, L.Current_Player.X_Position + 1, L.Current_Player.Y_Position);
-   begin
-      if L.Current_Player.X_Position < L.Current_Dungeon.X_Length then
-         if Right_T = abbr_tiles(Floor) or
-          Right_T = abbr_tiles(Open_Door) then
-            L.Current_Player.X_Position := L.Current_Player.X_Position + 1;
-            Check_Trigger(L, L.Current_Player.X_Position, L.Current_Player.Y_Position);
-            Update_Screen(L);
-         elsif Right_T = abbr_tiles(Closed_Door) or
-          Right_T = abbr_tiles(Secret_Door) then
-            Open_Door(L, L.Current_Player.X_Position + 1, L.Current_Player.Y_Position);
-         end if;
-      end if;
-   end Move_East;
+   end Move;
    
    function Interpret (L : in out Level; S : String; IT : Input_Type) return Boolean is
    begin
       Print_Char_Codes(S);
       if IT = Dungeon_Action then
-         if S = com_a then
-            Move_West(L);
-         elsif S = com_d then
-            Move_East(L);
-         elsif S = com_w then
-            Move_North(L);
-         elsif S = com_s then
-            Move_South(L);
+         if S = com_4 then
+            Move(L, -1, 0);
+         elsif S = com_6 then
+            Move(L, 1, 0);
+         elsif S = com_8 then
+            Move(L, 0, -1);
+         elsif S = com_2 then
+            Move(L, 0, 1);
+         elsif S = com_7 then
+            Move(L, -1, -1);
+         elsif S = com_9 then
+            Move(L, 1, -1);
+         elsif S = com_1 then
+            Move(L, -1, 1);
+         elsif S = com_3 then
+            Move(L, 1, 1);
          elsif S = com_q then
             return False;
          end if;

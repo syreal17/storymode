@@ -62,5 +62,7 @@ package mnstr is
       );
       
    all_monsters : Monsters := (large_rat, others=>blank_monster);
+   
+   function Get_Monster_Name_Str(M : Monster) return String;
 
 end mnstr;
