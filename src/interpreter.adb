@@ -1,27 +1,4 @@
 package body interpreter is
-
-   function Interpret (L : in out Level; S : String; IT : Input_Type) return Boolean is
-   begin
-      --Print_Char_Codes(S);
-      if IT = Dungeon_Action then
-         if S = com_a then
-            Move_Left(L);
-         elsif S = com_d then
-            Move_Right(L);
-         elsif S = com_w then
-            Move_Up(L);
-         elsif S = com_s then
-            Move_Down(L);
-         elsif S = com_q then
-            return False;
-         end if;
-      elsif IT = Continue_Text then
-         if S = com_y then
-            L.Current_Screen.Message := (NUL, others=>NUL);
-         end if;
-      end if;
-      return True;
-   end;
    
    procedure Discover_Monsters(L : in out Level; D : Dungeon_Room) is
       I : Positive := 1;
@@ -163,5 +140,92 @@ package body interpreter is
          end if;
       end if;
    end Move_Right;
+   
+   function Interpret (L : in out Level; S : String; IT : Input_Type) return Boolean is
+   begin
+      Print_Char_Codes(S);
+      if IT = Dungeon_Action then
+         if S = com_a then
+            Move_Left(L);
+         elsif S = com_d then
+            Move_Right(L);
+         elsif S = com_w then
+            Move_Up(L);
+         elsif S = com_s then
+            Move_Down(L);
+         elsif S = com_q then
+            return False;
+         end if;
+      elsif IT = Continue_Text then
+         if S = com_y then
+            L.Current_Screen.Message := (NUL, others=>NUL);
+         end if;
+      end if;
+      return True;
+   end;
+   
+   function Monster_Try_Action (L : in out Level; M_I : Positive; X_Target : Positive; Y_Target : Positive) return Boolean is
+      T : Tile;
+   begin
+      T := Get_Tile(L, X_Target, Y_Target);
+      if T = abbr_tiles(Floor) or T = abbr_tiles(Open_Door) then
+         L.Current_Monsters(M_I).X_Position := X_Target;
+         L.Current_Monsters(M_I).Y_Position := Y_Target;
+         return True;
+      elsif T = abbr_tiles(Player_Tile) then
+         null;
+         return True;
+      end if;
+      return False;
+   end Monster_Try_Action;
+   
+   procedure Monster_Action_Handler (L : in out Level; M_I : Positive) is
+      X_Vec : Integer;
+      Y_Vec : Integer;
+      X_Target : Positive;
+      Y_Target : Positive;
+      M : Monster;
+      Took_Action : Boolean;
+   begin
+      M := L.Current_Monsters(M_I);
+      Put_Line("Here at Monster_action");
+      if M.Visible then
+         Put_Line("Calculating vectors");
+         X_Vec := Integer'Max(Integer'Min(L.Current_Player.X_Position - M.X_Position, 1), -1);
+         Y_Vec := Integer'Max(Integer'Min(L.Current_Player.Y_Position - M.Y_Position, 1), -1);
+         
+         X_Target := M.X_Position + X_Vec;
+         Y_Target := M.Y_Position + Y_Vec;
+         
+         Took_Action := Monster_Try_Action(L, M_I, X_Target, Y_Target);
+         if Took_Action then
+            return;
+         end if;
+         
+         X_Target := M.X_Position + X_Vec;
+         Y_Target := M.Y_Position;
+         
+         Took_Action := Monster_Try_Action(L, M_I, X_Target, Y_Target);
+         if Took_Action then
+            return;
+         end if;
+
+         X_Target := M.X_Position;
+         Y_Target := M.Y_Position + Y_Vec;
+         
+         Took_Action := Monster_Try_Action(L, M_I, X_Target, Y_Target);
+         if Took_Action then
+            return;
+         end if;
+
+      end if;
+   end Monster_Action_Handler;
+   
+   procedure Others_Action (L : in out Level) is
+   begin
+      for M_I in 1 .. L.Current_Monsters_Count loop
+         Monster_Action_Handler(L, M_I);
+      end loop;
+   end Others_Action;
    
 end interpreter;

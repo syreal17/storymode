@@ -30,9 +30,6 @@ package interpreter is
   
    function Interpret (L : in out Level; S : String; IT : Input_Type) return Boolean;
   
-   procedure Move_Up(L : in out Level);
-   procedure Move_Down(L : in out Level);
-   procedure Move_Left(L : in out Level);
-   procedure Move_Right(L : in out Level);
+   procedure Others_Action (L : in out Level);
 
 end interpreter;

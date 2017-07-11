@@ -111,14 +111,20 @@ begin
    L.Current_Screen.Message := "As you step from the stairs, they seal behind you trapping you in the Pits. You hear a voice: 'Hello Sailor! Welcome to the Pits. Your Lord Baal has committed you and your mortal shell to this place for his dread amusement. You are not the first and you are not the last. Perhaps there's a way out? Maybe you can make some friends. Just pray to your gods that your death is quick, painless and unexpected. But hey, I won't leave you completely out to dry. I'll show you how to move down here. Type 'y' and then 'enter' when you understand this message. Then type 'd' and then 'enter' to move to the east.'" & (606 .. Full_Screen_Amt => NUL);
 
    while Cont loop
+      S := (NUL, others=>NUL);
       IT := Render(L);
       Get_Line(S, N);
+
       if N = 0 then
          S := S_last;
       end if;
       Cont := Interpret(L, S, IT);
       if N = 1 then
          S_last := S;
+      end if;
+
+      if IT = Dungeon_Action then
+         Others_Action(L);
       end if;
    end loop;
 end Main;
