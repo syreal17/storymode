@@ -49,6 +49,8 @@ package body camera is
    begin
       if Is_Player(L, X, Y) then
          return abbr_tiles(Player_Tile);
+      elsif Is_Visible_Monster(L, X, Y) then
+         return abbr_tiles(Monster_Tile);
       elsif Is_Room(L, X, Y) then
          --return '.';
          R := Get_Room(L, X, Y);

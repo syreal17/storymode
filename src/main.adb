@@ -2,9 +2,8 @@ with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Characters;
 with Ada.Characters.Latin_1; use Ada.Characters.Latin_1;
 
-with dngn; use dngn;
-with world; use world;
 with camera; use camera;
+with dngn; use dngn;
 with debug; use debug;
 with lvl; use lvl;
 with id; use id;
@@ -12,6 +11,7 @@ with scrn; use scrn;
 with plyr; use plyr;
 with interpreter; use interpreter;
 with trgr; use trgr;
+with mnstr; use mnstr;
 
 procedure Main is
 
@@ -22,7 +22,9 @@ procedure Main is
       new_R : Dungeon_Room;
       J : Positive := 1;
       K : Positive := 1;
+      H : Positive := 1;
       new_T : Trigger;
+      new_M : Monster;
    begin
       L.Current_Dungeon := D;
       L.Current_Dungeon.Board := transpose(L.Current_Dungeon.Board);
@@ -34,7 +36,17 @@ procedure Main is
                     (X_Position => X,
                      Y_Position => Y,
                      XP         => 1,
-                     HP         => 13);
+                     HP         => 13,
+                     LVL        => 0,
+                     PHYSICALITY=> 5,
+                     MYSTICISM  => 1,
+                     BALANCE    => 1,
+                     Melee      => 1,
+                     Manamancy  => 1,
+                     Sneak      => 1,
+                     Sprint     => 1,
+                     Search     => 1
+                     );
                   L.Current_Player := P;
                elsif I = SCREEN_a then
                   S :=
@@ -68,6 +80,18 @@ procedure Main is
                         L.Current_Triggers (K) := new_T;
                         L.Current_Triggers_Count := K;
                         K := K + 1;
+                     end if;
+                  end loop;
+               elsif Identifier'Pos(I) >= Identifier'Pos(M00001_1) and
+                Identifier'Pos(I) <= Identifier'Pos(M99999_9) then
+                  for M of all_monsters loop
+                     if M.ID = I then
+                        new_M := M;
+                        new_M.X_Position := X;
+                        new_M.Y_Position := Y;
+                        L.Current_Monsters (H) := new_M;
+                        L.Current_Monsters_Count := H;
+                        H := H + 1;
                      end if;
                   end loop;
                end if;

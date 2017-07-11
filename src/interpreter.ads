@@ -9,6 +9,7 @@ with camera; use camera;
 with world; use world;
 with id; use id;
 with trgr; use trgr;
+with mnstr; use mnstr;
 
 package interpreter is
    

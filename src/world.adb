@@ -8,6 +8,32 @@ package body world is
          return False;
       end if;
    end Is_Player;
+   
+   function Is_Monster (L : Level; X : Positive; Y : Positive) return Boolean is
+      I : Positive := 1;
+      M : Monster;
+   begin
+      for I in 1 .. L.Current_Monsters_Count loop
+         M := L.Current_Monsters (I);
+         if M.X_Position = X and M.Y_Position = Y then
+            return True;
+         end if;
+      end loop;
+      return False;
+   end Is_Monster;
+   
+   function Is_Visible_Monster (L : Level; X : Positive; Y : Positive) return Boolean is
+      I : Positive := 1;
+      M : Monster;
+   begin
+      for I in 1 .. L.Current_Monsters_Count loop
+         M := L.Current_Monsters (I);
+         if M.X_Position = X and M.Y_Position = Y and M.Visible then
+            return True;
+         end if;
+      end loop;
+      return False;
+   end Is_Visible_Monster;
 
    function Is_Room (L : Level; X : Positive; Y : Positive) return Boolean is
       R : Dungeon_Room;

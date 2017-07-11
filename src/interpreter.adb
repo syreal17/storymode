@@ -23,6 +23,20 @@ package body interpreter is
       return True;
    end;
    
+   procedure Discover_Monsters(L : in out Level; D : Dungeon_Room) is
+      I : Positive := 1;
+      M : Monster;
+      D_M : Dungeon_Room;
+   begin
+      for I in 1 .. L.Current_Monsters_Count loop
+         M := L.Current_Monsters(I);
+         D_M := Get_Room(L, M.X_Position, M.Y_Position);
+         if D_M.ID = D.ID then
+            L.Current_Monsters(I).Visible := True;
+         end if;
+      end loop;
+   end Discover_Monsters;
+   
    procedure Discover(L : in out Level; X : Positive; Y : Positive; Old_D : Dungeon_Room) is
       New_D : Dungeon_Room;
    begin
@@ -31,6 +45,7 @@ package body interpreter is
          if Old_D.ID /= New_D.ID and New_D.Discovered = False then
             New_D.Discovered := True;
             L.Current_Player.XP := L.Current_Player.XP + New_D.XP;
+            Discover_Monsters(L, New_D);
             Update_Room(L, New_D);
          end if;
       end if;

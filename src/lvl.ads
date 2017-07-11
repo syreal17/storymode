@@ -2,6 +2,7 @@ with dngn; use dngn;
 with scrn; use scrn;
 with plyr; use plyr;
 with trgr; use trgr;
+with mnstr; use mnstr;
 
 package lvl is
 
@@ -13,6 +14,8 @@ package lvl is
       Current_Rooms_Count : Positive;
       Current_Triggers    : Triggers;
       Current_Triggers_Count: Natural;
+      Current_Monsters    : Monsters;
+      Current_Monsters_Count : Natural;
    end record; 
 
 end lvl;
