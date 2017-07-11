@@ -40,12 +40,12 @@ procedure Main is
                      LVL        => 0,
                      PHYSICALITY=> 5,
                      MYSTICISM  => 1,
-                     BALANCE    => 1,
-                     Melee      => 1,
-                     Manamancy  => 1,
-                     Sneak      => 1,
-                     Sprint     => 1,
-                     Search     => 1
+                     BALANCE    => 1
+                     --Melee      => 1,
+                     --Manamancy  => 1,
+                     --Sneak      => 1,
+                     --Sprint     => 1,
+                     --Search     => 1
                      );
                   L.Current_Player := P;
                elsif I = SCREEN_a then
@@ -114,6 +114,7 @@ begin
       S := (NUL, others=>NUL);
       IT := Render(L);
       Get_Line(S, N);
+      Put_Line("here");
 
       if N = 0 then
          S := S_last;

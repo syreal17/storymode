@@ -4,16 +4,16 @@ package plyr is
       X_Position      : Positive;
       Y_Position      : Positive;
       XP              : Positive;
-      HP              : Positive;
+      HP              : Integer;
       LVL             : Natural;
       PHYSICALITY     : Positive;
       MYSTICISM       : Positive;
       BALANCE         : Positive;
-      Melee           : Positive;
-      Manamancy       : Positive;
-      Sneak           : Positive;
-      Sprint          : Positive;
-      Search          : Positive;
+      --Melee           : Positive;
+      --Manamancy       : Positive;
+      --Sneak           : Positive;
+      --Sprint          : Positive;
+      --Search          : Positive;
   end record; 
 
 end plyr;

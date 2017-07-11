@@ -1,16 +1,27 @@
+with Ada.Characters.Latin_1; use Ada.Characters.Latin_1;
+
 with id; use id;
 with drctn; use drctn;
 
 package mnstr is
+
+   type Monster_Name is new String(Positive range 1 .. 50);
 
    type Monster is record
       ID         : Identifier;
       X_Position : Positive;
       Y_Position : Positive;
       Visible    : Boolean;
-      HP         : Positive;
+      HP         : Integer;
       Facing     : Cardinal_Direction;
       XP_Reward  : Positive;
+      PHYSICALITY: Positive;
+      MYSTICISM  : Positive;
+      BALANCE    : Positive;
+      Name       : Monster_Name;
+      Name_length: Positive;
+      Armor      : Natural;
+      Alive      : Boolean;
       --Armor      : Armor_Item;
    end record;
    
@@ -23,7 +34,14 @@ package mnstr is
       Visible    => False,
       HP         => 8,
       Facing     => East,
-      XP_Reward  => 100
+      XP_Reward  => 100,
+      PHYSICALITY=> 3,
+      MYSTICISM  => 1,
+      BALANCE    => 1,
+      Name       => "large rat" & (10 .. 50 => NUL),
+      Name_length=> 9,
+      Armor      => 0,
+      Alive      => True
       );
       
    blank_monster : Monster :=
@@ -33,7 +51,14 @@ package mnstr is
       Visible    => False,
       HP         => 1,
       Facing     => North,
-      XP_Reward  => 1
+      XP_Reward  => 1,
+      PHYSICALITY=> 1,
+      MYSTICISM  => 1,
+      BALANCE    => 1,
+      Name       => "blank monster" & (14 .. 50 => NUL),
+      Name_length=> 13,
+      Armor      => 0,
+      Alive      => False
       );
       
    all_monsters : Monsters := (large_rat, others=>blank_monster);

@@ -34,6 +34,18 @@ package body world is
       end loop;
       return False;
    end Is_Visible_Monster;
+   
+   function Get_Monster_Index (L : Level; X : Positive; Y : Positive) return Positive is
+      M : Monster;
+   begin
+      for I in 1 .. L.Current_Monsters_Count loop
+         M := L.Current_Monsters (I);
+         if M.X_Position = X and M.Y_Position = Y then
+            return I;
+         end if;
+      end loop;
+      return Positive'Last;
+   end Get_Monster_Index;
 
    function Is_Room (L : Level; X : Positive; Y : Positive) return Boolean is
       R : Dungeon_Room;

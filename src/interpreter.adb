@@ -75,8 +75,19 @@ package body interpreter is
       L.Current_Screen.Y_Position := new_Screen_Y;
    end Update_Screen;
    
+   procedure Player_Attack(L : in out Level; X : Positive; Y : Positive) is
+      M_I : Positive;
+   begin
+      M_I := Get_Monster_Index(L, X, Y);
+      L.Current_Monsters (M_I).HP := L.Current_Monsters (M_I).HP - Integer'Max(L.Current_Player.PHYSICALITY - L.Current_Monsters(M_I).Armor, 0);
+      if L.Current_Monsters (M_I).HP <= 0 then
+         L.Current_Monsters (M_I).Alive := False;
+         L.Current_Player.XP := L.Current_Player.XP + L.Current_Monsters (M_I).XP_Reward;
+      end if;
+   end Player_Attack;
+   
    --TODO: move not based on display tile, but underlying abstract tile
-   procedure Move_Up(L : in out Level) is
+   procedure Move_North(L : in out Level) is
       Up_T : Tile := Get_Tile(L, L.Current_Player.X_Position, L.Current_Player.Y_Position - 1);
    begin
       if L.Current_Player.Y_Position > 1 then
@@ -87,12 +98,14 @@ package body interpreter is
             Update_Screen(L);
          elsif Up_T = abbr_tiles(Closed_Door) or
           Up_T = abbr_tiles(Secret_Door) then
-            Open_Door(L, L.Current_Player.X_Position, L.Current_Player.Y_Position - 1);   
+            Open_Door(L, L.Current_Player.X_Position, L.Current_Player.Y_Position - 1);
+         elsif Up_T = abbr_tiles(Monster_Tile) then
+            Player_Attack(L, L.Current_Player.X_Position, L.Current_Player.Y_Position - 1);
          end if;
       end if;
-   end Move_Up;
+   end Move_North;
    
-   procedure Move_Down(L : in out Level) is
+   procedure Move_South(L : in out Level) is
       Down_T : Tile := Get_Tile(L, L.Current_Player.X_Position, L.Current_Player.Y_Position + 1);
    begin
       if L.Current_Player.Y_Position < L.Current_Dungeon.Y_Length then
@@ -106,9 +119,9 @@ package body interpreter is
             Open_Door(L, L.Current_Player.X_Position, L.Current_Player.Y_Position + 1);   
          end if;
       end if;
-   end Move_Down;
+   end Move_South;
    
-   procedure Move_Left(L : in out Level) is
+   procedure Move_West(L : in out Level) is
       Left_T : Tile := Get_Tile(L, L.Current_Player.X_Position -1, L.Current_Player.Y_Position);
    begin
       if L.Current_Player.X_Position > 1 then
@@ -123,9 +136,9 @@ package body interpreter is
          end if;
          --Put_Line("move left");
       end if;
-   end Move_Left;
+   end Move_West;
    
-   procedure Move_Right(L : in out Level) is
+   procedure Move_East(L : in out Level) is
       Right_T : Tile := Get_Tile(L, L.Current_Player.X_Position + 1, L.Current_Player.Y_Position);
    begin
       if L.Current_Player.X_Position < L.Current_Dungeon.X_Length then
@@ -139,20 +152,20 @@ package body interpreter is
             Open_Door(L, L.Current_Player.X_Position + 1, L.Current_Player.Y_Position);
          end if;
       end if;
-   end Move_Right;
+   end Move_East;
    
    function Interpret (L : in out Level; S : String; IT : Input_Type) return Boolean is
    begin
       Print_Char_Codes(S);
       if IT = Dungeon_Action then
          if S = com_a then
-            Move_Left(L);
+            Move_West(L);
          elsif S = com_d then
-            Move_Right(L);
+            Move_East(L);
          elsif S = com_w then
-            Move_Up(L);
+            Move_North(L);
          elsif S = com_s then
-            Move_Down(L);
+            Move_South(L);
          elsif S = com_q then
             return False;
          end if;
@@ -188,9 +201,7 @@ package body interpreter is
       Took_Action : Boolean;
    begin
       M := L.Current_Monsters(M_I);
-      Put_Line("Here at Monster_action");
       if M.Visible then
-         Put_Line("Calculating vectors");
          X_Vec := Integer'Max(Integer'Min(L.Current_Player.X_Position - M.X_Position, 1), -1);
          Y_Vec := Integer'Max(Integer'Min(L.Current_Player.Y_Position - M.Y_Position, 1), -1);
          
@@ -224,7 +235,9 @@ package body interpreter is
    procedure Others_Action (L : in out Level) is
    begin
       for M_I in 1 .. L.Current_Monsters_Count loop
-         Monster_Action_Handler(L, M_I);
+         if L.Current_Monsters(M_I).Alive then
+            Monster_Action_Handler(L, M_I);
+         end if;
       end loop;
    end Others_Action;
    

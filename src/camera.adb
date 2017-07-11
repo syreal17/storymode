@@ -46,11 +46,17 @@ package body camera is
       T       : Tile;
       R_rel_X : Positive;
       R_rel_Y : Positive;
+      M_I     : Positive;
    begin
       if Is_Player(L, X, Y) then
          return abbr_tiles(Player_Tile);
       elsif Is_Visible_Monster(L, X, Y) then
-         return abbr_tiles(Monster_Tile);
+         M_I := Get_Monster_Index(L, X, Y);
+         if (L.Current_Monsters(M_I).Alive) then
+            return abbr_tiles(Monster_Tile);
+         else
+            return abbr_tiles(Monster_Corpse);
+         end if;
       elsif Is_Room(L, X, Y) then
          --return '.';
          R := Get_Room(L, X, Y);
