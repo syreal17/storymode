@@ -6,6 +6,9 @@ with mnstr; use mnstr;
 
 package lvl is
 
+   --This is a singleton upon which most computations are based. It keeps track
+   --of every object in the game, the player and the dungeon itself.
+   
    type Level is record
       Current_Dungeon     : Dungeon;
       Current_Screen      : Screen;
