@@ -19,3 +19,6 @@ Or open `storymode.gpr` with GPS and build using that IDE.
 * Custom rooms and dungeons
 * Triggers that display text
 * Secret rooms
+* Simple monsters
+* Simple combat
+* Simple monster pathfinding (gravitate towards player, ignoring walls)
