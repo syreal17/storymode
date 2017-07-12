@@ -62,7 +62,24 @@ package trgr is
      Triggered   => False,
      Message     => "'Enter 'a' to check the west wall for a secret door.'" & (54 .. Full_Screen_Amt => NUL)
      );
+     
+   tutorial_6 : Trigger :=
+     (ID         => TRIG0006,
+     X_Position  => 1,
+     Y_Position  => 1,
+     Triggered   => False,
+     Message     => "'A large rat! Walk into him to attack. You can take him. I hope...'" & (68 .. Full_Screen_Amt => NUL)
+     );
+     
+     tutorial_7 : Trigger :=
+     (ID         => TRIG0007,
+     X_Position  => 1,
+     Y_Position  => 1,
+     Triggered   => False,
+     Message     => "'Walk into a door to open it. Stand over it and enter 'close' to close it.'" & (76 .. Full_Screen_Amt => NUL)
+     );
 
-  all_triggers : Triggers := (tutorial_1, tutorial_2, tutorial_3, tutorial_4, tutorial_5, others=>blank_trigger);
+  all_triggers : Triggers := (tutorial_1, tutorial_2, tutorial_3, tutorial_4, 
+     tutorial_5, tutorial_6, tutorial_7, others=>blank_trigger);
 
 end trgr;

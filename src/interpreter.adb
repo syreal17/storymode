@@ -38,6 +38,19 @@ package body interpreter is
       Discover(L, X, Y-1, Old_D);
    end Try_Discovery_Cardinal;
    
+   procedure Check_Trigger(L : in out Level; X : Positive; Y : Positive) is
+   begin
+      if L.Current_Triggers_Count > 0 then
+         for T of L.Current_Triggers loop
+            if T.X_Position = X and T.Y_Position = Y  and not T.Triggered then
+               L.Current_Screen.Message := T.Message;
+               --Append_Line_Message(L.Current_Screen, T.Message);
+               T.Triggered := True;
+            end if;
+         end loop;
+      end if;
+   end Check_Trigger;
+   
    procedure Open_Door(L : in out Level; X : Positive; Y : Positive) is
       D : Dungeon_Room;
       Room_X : Positive;
@@ -51,19 +64,8 @@ package body interpreter is
       --Print_Board(D);
       Update_Room(L, D);
       Try_Discovery_Cardinal(L, X, Y);
+      Check_Trigger(L, X, Y);
    end Open_Door;
-   
-   procedure Check_Trigger(L : in out Level; X : Positive; Y : Positive) is
-   begin
-      if L.Current_Triggers_Count > 0 then
-         for T of L.Current_Triggers loop
-            if T.X_Position = X and T.Y_Position = Y  and not T.Triggered then
-               L.Current_Screen.Message := T.Message;
-               T.Triggered := True;
-            end if;
-         end loop;
-      end if;
-   end Check_Trigger;
    
    procedure Update_Screen(L : in out Level) is
       new_Screen_X : Positive;

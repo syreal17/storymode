@@ -43,6 +43,8 @@ package interpreter is
       ('1', others=>NUL);
    com_3 : String(1 .. Screen_X_Length) :=
       ('3', others=>NUL);
+   com_close : String(1 .. Screen_X_Length) :=
+      ('c','l','o','s','e', others=>NUL);
 
 
    function Interpret (L : in out Level; S : String; IT : Input_Type) return Boolean;
