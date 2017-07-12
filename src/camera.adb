@@ -22,7 +22,7 @@ package body camera is
                --L.Current_Screen.Message(I) := NUL;
                I := I + 1;
             else
-               Screen(J) := display_tiles(Get_Tile(L, X, Y));
+               Screen(J) := display_tiles(Get_Top_Tile(L, X, Y));
             end if;
             J := J + 1;
          end loop;
@@ -41,7 +41,7 @@ package body camera is
       
    end;
    
-   function Get_Tile (L : Level; X : Positive; Y : Positive) return Tile is
+   function Get_Top_Tile (L : Level; X : Positive; Y : Positive) return Tile is
       R       : Dungeon_Room;
       T       : Tile;
       R_rel_X : Positive;
@@ -76,7 +76,30 @@ package body camera is
          end if;
       end if;
       return abbr_tiles(Nothing);
-   end Get_Tile;
+   end Get_Top_Tile;
+   
+   function Get_Bottom_Tile (L : Level; X : Positive; Y : Positive) return Tile is
+      R       : Dungeon_Room;
+      T       : Tile;
+      R_rel_X : Positive;
+      R_rel_Y : Positive;
+   begin
+      if Is_Room(L, X, Y) then
+         --return '.';
+         R := Get_Room(L, X, Y);
+         --TODO: create function for relative X and Y (rooms and screen)
+         R_rel_X := X - (R.X_Position - 1);
+         R_rel_Y := Y - (R.Y_position - 1);
+         T := R.Board(R_rel_X, R_rel_Y);
+         --TODO: add R.Visible as well
+         if R.Discovered then
+            return T;
+         else
+            return abbr_tiles(Nothing);
+         end if;
+      end if;
+      return abbr_tiles(Nothing);
+   end Get_Bottom_Tile;
    
    --function Get_Render_Message(S : String) return String(1 .. (Screen_X_Length + 1) * (Screen_Y_Length + 1) ) is
    --begin

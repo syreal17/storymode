@@ -90,6 +90,27 @@ package body world is
       return blank_room;
    end Get_Room;
    
+   function Get_Room_Index(L : Level; X : Positive; Y : Positive) return Positive is
+      R : Dungeon_Room;
+      R_X_min : Positive;
+      R_X_max : Positive;
+      R_Y_min : Positive;
+      R_Y_max : Positive;
+   begin
+      for J in 1 .. L.Current_Rooms_Count loop
+         R := L.Current_Rooms (J);
+         R_X_min := R.X_Position;
+         R_X_max := R_X_min + R.X_Length;
+         R_Y_min := R.Y_Position;
+         R_Y_max := R_Y_min + R.Y_Length;
+         if X >= R_X_min and X < R_X_max and Y >= R_Y_min and Y < R_Y_max then        
+            return J;
+         end if;
+      end loop;
+
+      return Positive'Last;
+   end Get_Room_Index;
+   
    procedure Update_Room(L : in out Level; D : Dungeon_Room) is
    begin
       for J in 1 .. L.Current_Rooms_Count loop

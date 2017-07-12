@@ -32,6 +32,7 @@ package body interpreter is
       Old_D : Dungeon_Room;
    begin
       Old_D := Get_Room(L, X, Y);
+      --TODO: add discovery for diagonals
       Discover(L, X+1, Y, Old_D);
       Discover(L, X-1, Y, Old_D);
       Discover(L, X, Y+1, Old_D);
@@ -52,11 +53,12 @@ package body interpreter is
    end Check_Trigger;
    
    procedure Open_Door(L : in out Level; X : Positive; Y : Positive) is
-      D : Dungeon_Room;
+      D      : Dungeon_Room;
       Room_X : Positive;
       Room_Y : Positive;
    begin
    --TODO: create generic function for getting room relative x,y (screen relative too)
+   --TODO: do not use Update_Room, can it handle multiple rooms of the same ID? No it can't!
       D := Get_Room(L, X, Y);
       Room_X := X - D.X_Position + 1;
       Room_Y := Y - D.Y_Position + 1;
@@ -66,6 +68,23 @@ package body interpreter is
       Try_Discovery_Cardinal(L, X, Y);
       Check_Trigger(L, X, Y);
    end Open_Door;
+   
+   procedure Close_Door(L : in out Level; X : Positive; Y : Positive) is
+      D      : Dungeon_Room;
+      Room_X : Positive;
+      Room_Y : Positive;
+      D_I    : Positive;
+   begin
+      if Get_Bottom_Tile(L, X, Y) = abbr_tiles(Open_Door) then
+         D_I := Get_Room_Index(L, X, Y);
+         D   := L.Current_Rooms(D_I);
+         Room_X := X - D.X_Position + 1;
+         Room_Y := Y - D.Y_Position + 1;
+         L.Current_Rooms(D_I).Board(Room_X, Room_Y) := abbr_tiles(Closed_Door);
+      else
+         L.Current_Screen.Message := "There is no door where you're standing" & (39 .. Full_Screen_Amt => NUL);
+      end if;
+   end Close_Door;
    
    procedure Update_Screen(L : in out Level) is
       new_Screen_X : Positive;
@@ -96,7 +115,7 @@ package body interpreter is
    procedure Move (L : in out Level; X_Vec : Integer; Y_Vec : Integer) is
       New_X : Positive := L.Current_Player.X_Position + X_Vec;
       New_Y : Positive := L.Current_Player.Y_Position + Y_Vec;
-      T_New : Tile := Get_Tile(L, New_X, New_Y);
+      T_New : Tile := Get_Top_Tile(L, New_X, New_Y);
    begin
       if L.Current_Player.Y_Position > 1 and L.Current_Player.X_Position > 1 and
        L.Current_Player.Y_Position < L.Current_Dungeon.Y_Length and
@@ -137,6 +156,8 @@ package body interpreter is
                Move(L, -1, 1);
             elsif S = com_3 then
                Move(L, 1, 1);
+            elsif S = com_close then
+               Close_Door(L, L.Current_Player.X_Position, L.Current_Player.Y_Position);
             end if;
          end if;
          if S = com_q then
@@ -154,7 +175,7 @@ package body interpreter is
       T : Tile;
       M : Monster := L.Current_Monsters(M_I);
    begin
-      T := Get_Tile(L, X_Target, Y_Target);
+      T := Get_Top_Tile(L, X_Target, Y_Target);
       if T = abbr_tiles(Floor) or T = abbr_tiles(Open_Door) then
          L.Current_Monsters(M_I).X_Position := X_Target;
          L.Current_Monsters(M_I).Y_Position := Y_Target;

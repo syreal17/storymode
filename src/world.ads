@@ -13,6 +13,7 @@ package world is
    --TODO: if I did Get_Room_Index , I might be able to skip Update_Room step
    --      and that may let me use the same room multiple times in a dungeon
    function Get_Room(L : Level; X : Positive; Y : Positive) return Dungeon_Room;
+   function Get_Room_Index(L : Level; X : Positive; Y : Positive) return Positive;
    procedure Update_Room(L : in out Level; D : Dungeon_Room);
 
 end world;
