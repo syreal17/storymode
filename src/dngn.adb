@@ -1,5 +1,6 @@
 package body dngn is
    
+   --Transpose: A: matrix to transpose. Swithcs rows and columns This is needed because storage of these boards is opposite to how it appears.
    function transpose(A: in Dungeon_Board) return Dungeon_Board  is
       B : Dungeon_Board;
    begin
@@ -11,6 +12,7 @@ package body dngn is
       return B;
    end transpose;
    
+   --Transpose: A: matrix to transpose. Swithcs rows and columns This is needed because storage of these boards is opposite to how it appears.
    function transpose(A: in Room_Board) return Room_Board  is
       B : Room_Board;
    begin
