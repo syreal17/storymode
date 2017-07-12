@@ -15,22 +15,28 @@ with mnstr; use mnstr;
 
 procedure Main is
 
+   --Load_Dungeon: D: dungeon to load, L: level to load it into
+   --              Takes all the identifiers of the dungeon board and loads their
+   --              respective objects in the level singleton
    procedure Load_Dungeon ( D : Dungeon; L : in out Level ) is
       I : Identifier;
       P : Player;
       S : Screen;
       new_R : Dungeon_Room;
+      new_T : Trigger;
+      new_M : Monster;
       J : Positive := 1;
       K : Positive := 1;
       H : Positive := 1;
-      new_T : Trigger;
-      new_M : Monster;
    begin
       L.Current_Dungeon := D;
+      --we transpose because the underlying 2d array storage layout is opposite to what we expect.
       L.Current_Dungeon.Board := transpose(L.Current_Dungeon.Board);
       for X in 1 .. L.Current_Dungeon.X_Length loop
          for Y in 1 .. L.Current_Dungeon.Y_Length loop
                I := L.Current_Dungeon.Board (X, Y);
+
+               --this is simply the loading of objects into the level singleton
                if I = PLAYER_a then
                   P :=
                     (X_Position => X,
@@ -110,22 +116,34 @@ procedure Main is
 begin
    Load_Dungeon(entry_level, L);
 
+   --intro message
    L.Current_Screen.Message := "As you step from the stairs, they seal behind you trapping you in the Pits. You hear a voice: 'Hello Sailor! Welcome to the Pits. Your Lord Baal has committed you and your mortal shell to this place for his dread amusement. You are not the first and you are not the last. Perhaps there's a way out? Maybe you can make some friends. Just pray to your gods that your death is quick, painless and unexpected. But hey, I won't leave you completely out to dry. I'll show you how to move down here. Type 'y' and then 'enter' when you understand this message. Then type 'd' and then 'enter' to move to the east.'" & (606 .. Full_Screen_Amt => NUL);
 
+   --Game loop
    while Cont loop
       S := (NUL, others=>NUL);
+      --rendering returns input type based on whether there is a message to Continue from or, if we are just waiting for
+      --the player to make a move
       IT := Render(L);
-      Get_Line(S, N);
-      Put_Line("here");
 
+      --this is how the player inputs
+      Get_Line(S, N);
+
+      --if nothing was input, use the last single letter command
       if N = 0 then
          S := S_last;
       end if;
+
+      --Cont is whether to continue game loop. The player inputting 'q' makes this False
       Cont := Interpret(L, S, IT);
-      if N = 1 then
+
+      --if it's a single letter command, not equal to 'y' or 'n' then remember it as the last single letter command
+      if N = 1 and S /= com_y and S /= com_n then
          S_last := S;
       end if;
 
+      --if the player took a dungeon action then the others in the dungeon get a turn too. This avoids penalizing
+      --the player for saying 'y' to a continue screen.
       if IT = Dungeon_Action then
          Others_Action(L);
       end if;
