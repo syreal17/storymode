@@ -35,6 +35,7 @@ package body world is
       return False;
    end Is_Visible_Monster;
    
+   --Get_monster_index: L : current level, XY, position of monster
    function Get_Monster_Index (L : Level; X : Positive; Y : Positive) return Positive is
       M : Monster;
    begin
@@ -47,6 +48,8 @@ package body world is
       return Positive'Last;
    end Get_Monster_Index;
 
+   --Is_Room: L: currnet level, XY position of the room?
+   --         Returns true if a room contains a point in the dungeon
    function Is_Room (L : Level; X : Positive; Y : Positive) return Boolean is
       R : Dungeon_Room;
       R_X_min : Positive;
@@ -69,6 +72,8 @@ package body world is
       return False;
    end Is_Room;
 
+   --Get_Room: L: current level, XY: position of the room
+   --          Gets a copy of the room at the specified position otherwise a blank room
    function Get_Room(L : Level; X : Positive; Y : Positive) return Dungeon_Room is
       R : Dungeon_Room;
       R_X_min : Positive;
@@ -90,6 +95,8 @@ package body world is
       return blank_room;
    end Get_Room;
    
+   --Get_Room_Index: L: current level, XY, position in dungeon to get room from
+   --                returns the index to the room in the level singleton array of rooms
    function Get_Room_Index(L : Level; X : Positive; Y : Positive) return Positive is
       R : Dungeon_Room;
       R_X_min : Positive;
@@ -111,6 +118,8 @@ package body world is
       return Positive'Last;
    end Get_Room_Index;
    
+   --Update_Room: L: current level; D : room to update
+   --             Updates room in level singleton with copy, but relies on ID to be unique...
    procedure Update_Room(L : in out Level; D : Dungeon_Room) is
    begin
       for J in 1 .. L.Current_Rooms_Count loop
