@@ -1,5 +1,6 @@
 package body scrn is
 
+   --Append_Line_Message: Scrn: screen to change, S: string to append
    procedure Append_Line_Message(Scrn : in out Screen; S : String) is
    begin
       for I in 1 .. Full_Screen_Amt loop
