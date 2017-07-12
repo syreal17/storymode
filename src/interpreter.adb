@@ -56,15 +56,14 @@ package body interpreter is
       D      : Dungeon_Room;
       Room_X : Positive;
       Room_Y : Positive;
+      D_I    : Positive;
    begin
    --TODO: create generic function for getting room relative x,y (screen relative too)
-   --TODO: do not use Update_Room, can it handle multiple rooms of the same ID? No it can't!
-      D := Get_Room(L, X, Y);
+      D_I := Get_Room_Index(L, X, Y);
+      D := L.Current_Rooms(D_I);
       Room_X := X - D.X_Position + 1;
       Room_Y := Y - D.Y_Position + 1;
-      D.Board(Room_X, Room_Y) := abbr_tiles(Open_Door);
-      --Print_Board(D);
-      Update_Room(L, D);
+      L.Current_Rooms(D_I).Board(Room_X, Room_Y) := abbr_tiles(Open_Door);
       Try_Discovery_Cardinal(L, X, Y);
       Check_Trigger(L, X, Y);
    end Open_Door;
