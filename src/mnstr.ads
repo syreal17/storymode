@@ -63,6 +63,8 @@ package mnstr is
       
    all_monsters : Monsters := (large_rat, others=>blank_monster);
    
+   --Get_Monstger_Name_Str: M: monster to get name
+   --                       Returns unbounded string from monster record
    function Get_Monster_Name_Str(M : Monster) return String;
 
 end mnstr;
