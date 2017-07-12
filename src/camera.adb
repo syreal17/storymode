@@ -49,7 +49,11 @@ package body camera is
       M_I     : Positive;
    begin
       if Is_Player(L, X, Y) then
-         return abbr_tiles(Player_Tile);
+         if L.Current_Player.Alive then
+            return abbr_tiles(Player_Tile);
+         else
+            return abbr_tiles(Player_Corpse);
+         end if;
       elsif Is_Visible_Monster(L, X, Y) then
          M_I := Get_Monster_Index(L, X, Y);
          if (L.Current_Monsters(M_I).Alive) then

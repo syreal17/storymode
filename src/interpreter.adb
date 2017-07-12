@@ -86,6 +86,8 @@ package body interpreter is
          L.Current_Screen.Message := "You slay the " & Get_Monster_Name_Str(M) & "!" & (14 + M.Name_length + 1 .. Full_Screen_Amt => NUL);
          L.Current_Monsters (M_I).Alive := False;
          L.Current_Player.XP := L.Current_Player.XP + L.Current_Monsters (M_I).XP_Reward;
+      else
+         L.Current_Screen.Message := "You attack the " & Get_Monster_Name_Str(M) & "!" & (16 + M.Name_length + 1 .. Full_Screen_Amt => NUL);
       end if;
    end Player_Attack;
    
@@ -116,23 +118,26 @@ package body interpreter is
    begin
       Print_Char_Codes(S);
       if IT = Dungeon_Action then
-         if S = com_4 then
-            Move(L, -1, 0);
-         elsif S = com_6 then
-            Move(L, 1, 0);
-         elsif S = com_8 then
-            Move(L, 0, -1);
-         elsif S = com_2 then
-            Move(L, 0, 1);
-         elsif S = com_7 then
-            Move(L, -1, -1);
-         elsif S = com_9 then
-            Move(L, 1, -1);
-         elsif S = com_1 then
-            Move(L, -1, 1);
-         elsif S = com_3 then
-            Move(L, 1, 1);
-         elsif S = com_q then
+         if L.Current_Player.Alive then
+            if S = com_4 then
+               Move(L, -1, 0);
+            elsif S = com_6 then
+               Move(L, 1, 0);
+            elsif S = com_8 then
+               Move(L, 0, -1);
+            elsif S = com_2 then
+               Move(L, 0, 1);
+            elsif S = com_7 then
+               Move(L, -1, -1);
+            elsif S = com_9 then
+               Move(L, 1, -1);
+            elsif S = com_1 then
+               Move(L, -1, 1);
+            elsif S = com_3 then
+               Move(L, 1, 1);
+            end if;
+         end if;
+         if S = com_q then
             return False;
          end if;
       elsif IT = Continue_Text then
@@ -145,6 +150,7 @@ package body interpreter is
    
    function Monster_Try_Action (L : in out Level; M_I : Positive; X_Target : Positive; Y_Target : Positive) return Boolean is
       T : Tile;
+      M : Monster := L.Current_Monsters(M_I);
    begin
       T := Get_Tile(L, X_Target, Y_Target);
       if T = abbr_tiles(Floor) or T = abbr_tiles(Open_Door) then
@@ -152,7 +158,15 @@ package body interpreter is
          L.Current_Monsters(M_I).Y_Position := Y_Target;
          return True;
       elsif T = abbr_tiles(Player_Tile) then
-         null;
+         L.Current_Player.HP := L.Current_Player.HP - Integer'Max(M.PHYSICALITY - L.Current_Player.Armor, 0);
+         if L.Current_Player.HP <= 0 then
+            L.Current_Player.Alive := False;
+            --L.Current_Screen.Message := "The " & Get_Monster_Name_Str(M) & " has slain you." & (19 + M.Name_length + 1 .. Full_Screen_Amt => NUL);
+            Append_Line_Message(L.Current_Screen, "The " & Get_Monster_Name_str(M) & " has slain you.");
+         else
+            --L.Current_Screen.Message := "The " & Get_Monster_Name_Str(M) & " attacks you!" & (17 + M.Name_length + 1 .. Full_Screen_Amt => NUL);
+            Append_Line_message(L.Current_Screen, "The " & Get_Monster_Name_Str(M) & " attacks you!");
+         end if;
          return True;
       end if;
       return False;

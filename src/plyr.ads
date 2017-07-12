@@ -9,6 +9,8 @@ package plyr is
       PHYSICALITY     : Positive;
       MYSTICISM       : Positive;
       BALANCE         : Positive;
+      Armor           : Natural;
+      Alive           : Boolean;
       --Melee           : Positive;
       --Manamancy       : Positive;
       --Sneak           : Positive;

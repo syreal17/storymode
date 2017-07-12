@@ -40,7 +40,9 @@ procedure Main is
                      LVL        => 0,
                      PHYSICALITY=> 5,
                      MYSTICISM  => 1,
-                     BALANCE    => 1
+                     BALANCE    => 1,
+                     Armor      => 0,
+                     Alive      => True
                      --Melee      => 1,
                      --Manamancy  => 1,
                      --Sneak      => 1,
