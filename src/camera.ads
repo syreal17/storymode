@@ -9,9 +9,15 @@ with id; use id;
 
 package camera is
    
-   --function Get_Render_Message(S : String) return String(1 .. (Screen_X_Length + 1) * (Screen_Y_Length + 1) );
+   -- Render: L: the level to render. Renders a what is in the level's screen: monsters, players, dungeon tiles.
    function Render (L : in out Level) return Input_Type;
+   
+   -- Get_Top_tile: L: the level to get tile from. X: x position of tile. Y: y position of tile
+   --               Gets top tile, player takes precedence over monsters which take precedence over dungeon tiles
    function Get_Top_Tile (L : Level; X : Positive; Y : Positive) return Tile;
+   
+   -- Get_Bottom_Tile : L: the level to get tile from. X: x position of tile. Y: y position of tile
+   --                   Gets dungeon tile at position
    function Get_Bottom_Tile (L : Level; X : Positive; Y : Positive) return Tile;
 
 end camera;
