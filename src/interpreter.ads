@@ -13,6 +13,7 @@ with mnstr; use mnstr;
 
 package interpreter is
    
+   --commands. What is entered by the player to take actions or acknowledge messages
    com_a : String(1 .. Screen_X_Length) :=
       (LC_A, others=>NUL);
    com_d : String(1 .. Screen_X_Length) :=
@@ -47,8 +48,11 @@ package interpreter is
       ('c','l','o','s','e', others=>NUL);
 
 
+   --Interpret: L : current level, S : Player entered string, IT : what input interpreter should be expecting
+   --           Intrepts player input to do an action
    function Interpret (L : in out Level; S : String; IT : Input_Type) return Boolean;
   
+   --Others_Action: L : current level. Lets monsters and NPCs take an action
    procedure Others_Action (L : in out Level);
 
 end interpreter;
