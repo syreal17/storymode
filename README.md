@@ -12,6 +12,8 @@ gnatmake main.adb
 
 Or open `storymode.gpr` with GPS and build using that IDE.
 
+Current terminal/console dimensions of output are based on a Windows 120x30 command prompt. Such dimensions allow for a near perfect illusion of movement using only the primitive basic Ada library "Put" command.
+
 ## Features
 
 * Player movement
@@ -19,3 +21,6 @@ Or open `storymode.gpr` with GPS and build using that IDE.
 * Custom rooms and dungeons
 * Triggers that display text
 * Secret rooms
+* Simple monsters
+* Simple combat
+* Simple monster pathfinding (gravitate towards player, ignoring walls)
