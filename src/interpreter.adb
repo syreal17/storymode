@@ -163,6 +163,39 @@ package body interpreter is
       end if;
    end Move;
    
+   procedure Show_Stats(L : in out Level) is
+      S : String(1 .. Full_Screen_Amt);
+      N1 : Positive;
+      N2 : Positive;
+      N3 : Positive;
+      N4 : Positive;
+      N5 : Positive;
+      N6 : Positive;
+      N7 : Positive;
+      P : Player;
+   begin
+      P := L.Current_Player;
+      N1 := 5 + Natural'Image(P.HP)'Length + 1 + Positive'Image(P.HP_Max)'Length;
+      N2 := 5 + Positive'Image(P.XP)'Length;
+      N3 := 14 + Positive'Image(P.PHYSICALITY)'Length;
+      N4 := 14 + Positive'Image(P.MYSTICISM)'Length;
+      N5 := 14 + Positive'Image(P.BALANCE)'Length;
+      N6 := 14 + Positive'Image(P.Armor)'Length;
+      N7 := 5 + Natural'Image(P.LVL)'Length;
+      S := 
+       "HP : " & Natural'Image(P.HP) & "/" & Positive'Image(P.HP_Max) & (N1 + 1 .. Screen_X_Length + 1 => ' ') &
+       "XP : " & Positive'Image(P.XP) & (Screen_X_Length + 1 +N2 + 1 .. (Screen_X_Length + 1)*2 => ' ') &
+       "LVL: " & Natural'Image(P.LVL) & ((Screen_X_Length + 1)*2 +N7 + 1 .. (Screen_X_Length + 1)*3 => ' ') &
+       "PHYSICALITY : " & Positive'Image(P.PHYSICALITY) & ((Screen_X_Length + 1)*3 +N3 + 1 .. (Screen_X_Length + 1)*4 => ' ') &
+       "MYSTICISM   : " & Positive'Image(P.MYSTICISM) & ((Screen_X_Length + 1)*4 +N4 + 1 .. (Screen_X_Length + 1)*5 => ' ') &
+       "BALANCE     : " & Positive'Image(P.BALANCE) & ((Screen_X_Length + 1)*5 +N5 + 1 .. (Screen_X_Length + 1)*6 => ' ') &
+       "Armor       : " & Positive'Image(P.Armor) & ((Screen_X_Length + 1)*6 +N6 + 1 .. (Screen_X_Length + 1)*7 => ' ') &
+       ((Screen_X_Length + 1)*7+1 .. Full_Screen_Amt => NUL);
+      --Put_Line(S'Last);
+      --Put_Line(
+      L.Current_Screen.Message := S;
+   end Show_Stats;
+   
    --Interpret: L : current level, S : Player entered string, IT : what input interpreter should be expecting
    --           Returns whether game loop should continue or not. Inteprets player input to do an action
    function Interpret (L : in out Level; S : String; IT : Input_Type) return Boolean is
@@ -188,6 +221,8 @@ package body interpreter is
                Move(L, 1, 1);
             elsif S = com_close then
                Close_Door(L, L.Current_Player.X_Position, L.Current_Player.Y_Position);
+            elsif S = com_s then
+               Show_Stats(L);
             end if;
          end if;
          if S = com_q then
@@ -197,6 +232,8 @@ package body interpreter is
          if S = com_y then
             --clearing message make dungeon action happen next
             L.Current_Screen.Message := (NUL, others=>NUL);
+         elsif S = com_q then
+            return False;
          end if;
       end if;
       return True;

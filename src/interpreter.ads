@@ -10,6 +10,7 @@ with world; use world;
 with id; use id;
 with trgr; use trgr;
 with mnstr; use mnstr;
+with plyr; use plyr;
 
 package interpreter is
    

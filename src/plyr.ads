@@ -5,6 +5,7 @@ package plyr is
       Y_Position      : Positive;
       XP              : Positive;
       HP              : Integer;
+      HP_Max          : Positive;
       LVL             : Natural;
       PHYSICALITY     : Positive;
       MYSTICISM       : Positive;
