@@ -36,7 +36,7 @@ package trgr is
      X_Position  => 1,
      Y_Position  => 1,
      Triggered   => False,
-     Message     => "'Enter 'a' to move to the west.'" & (33 .. Full_Screen_Amt => NUL)
+     Message     => "'Enter '4' to move to the west.'" & (33 .. Full_Screen_Amt => NUL)
      );
      
   tutorial_3 : Trigger :=
@@ -44,7 +44,7 @@ package trgr is
      X_Position  => 1,
      Y_Position  => 1,
      Triggered   => False,
-     Message     => "'Enter 's' to move to the south.'" & (34 .. Full_Screen_Amt => NUL)
+     Message     => "'Enter '2' to move to the south.'" & (34 .. Full_Screen_Amt => NUL)
      );
      
   tutorial_4 : Trigger :=
@@ -52,7 +52,7 @@ package trgr is
      X_Position  => 1,
      Y_Position  => 1,
      Triggered   => False,
-     Message     => "'Enter 'w' to move to the north.'" & (34 .. Full_Screen_Amt => NUL)
+     Message     => "'Enter '8' to move to the north.'" & (34 .. Full_Screen_Amt => NUL)
      );
 
    tutorial_5 : Trigger :=
@@ -60,7 +60,7 @@ package trgr is
      X_Position  => 1,
      Y_Position  => 1,
      Triggered   => False,
-     Message     => "'Enter 'a' to check the west wall for a secret door.'" & (54 .. Full_Screen_Amt => NUL)
+     Message     => "'Enter '4' to check the west wall for a secret door.'" & (54 .. Full_Screen_Amt => NUL)
      );
      
    tutorial_6 : Trigger :=

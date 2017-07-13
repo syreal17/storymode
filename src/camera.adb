@@ -9,7 +9,9 @@ package body camera is
       Screen       : String(1 .. Full_Screen_Amt ); --the single string that becomes what is output to the screen
       J            : Positive := 1; --index of string we're building for the screen's view of level
       I            : Positive := 1; --index of the message we're printing to the screen before rendering dungeon
+      K            : Positive := 1; --index of the loot message we're printing to the screen before rendering dungeon
       Print_Message: Boolean := True; --assume we're printing a message, but check first thing in the loop
+      Print_Loot   : Boolean := True;
    begin
    
       for Y in Screen_Y_min .. Screen_Y_max loop
@@ -19,9 +21,16 @@ package body camera is
                Print_Message := False;
             end if;
             
+            if L.Current_Screen.Loot(K) = NUL then
+               Print_Loot := False;
+            end if;
+            
             if Print_Message then
                Screen(J) := L.Current_Screen.Message(I);
                I := I + 1;
+            elsif Print_Loot then
+               Screen(J) := L.Current_Screen.Loot(K);
+               K := K + 1;
             else
                Screen(J) := display_tiles(Get_Top_Tile(L, X, Y));
             end if;
@@ -37,6 +46,9 @@ package body camera is
       if I >= 2 then
          Put("Continue (y/n)? ");
          return Continue_Text;
+      elsif K >= 2 then
+         Put("Take: ");
+         return Loot_Text;
       else
          Put("Action: ");
          return Dungeon_Action;

@@ -2,6 +2,7 @@ with Ada.Characters.Latin_1; use Ada.Characters.Latin_1;
 
 with id; use id;
 with drctn; use drctn;
+with itm; use itm;
 
 package mnstr is
 
@@ -22,6 +23,7 @@ package mnstr is
       Name_length: Positive;
       Armor      : Natural;
       Alive      : Boolean;
+      Inv        : Inventory;
       --Armor      : Armor_Item;
    end record;
    
@@ -41,7 +43,8 @@ package mnstr is
       Name       => "large rat" & (10 .. 50 => NUL),
       Name_length=> 9,
       Armor      => 0,
-      Alive      => True
+      Alive      => True,
+      Inv        => (rat_meat, others=>noitem)
       );
       
    blank_monster : Monster :=
@@ -58,7 +61,8 @@ package mnstr is
       Name       => "blank monster" & (14 .. 50 => NUL),
       Name_length=> 13,
       Armor      => 0,
-      Alive      => False
+      Alive      => False,
+      Inv        => (noitem, others=>noitem)
       );
       
    all_monsters : Monsters := (large_rat, others=>blank_monster);

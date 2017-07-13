@@ -56,6 +56,7 @@ procedure Main is
                      --Sprint     => 1,
                      --Search     => 1
                      );
+                  P.BALANCE := Positive'Min(P.PHYSICALITY, P.MYSTICISM);
                   L.Current_Player := P;
                elsif I = SCREEN_a then
                   S :=
@@ -63,7 +64,8 @@ procedure Main is
                      Y_Position => Y,
                      X_Length   => Screen_X_Length,
                      Y_Length   => Screen_Y_Length,
-                     Message    => (NUL, others=>NUL)
+                     Message    => (NUL, others=>NUL),
+                     Loot       => (NUL, others=>NUL)
                      );
                   L.Current_Screen := S;
                elsif Identifier'Pos(I) <= Identifier'Pos(RM100001) then
@@ -118,7 +120,7 @@ begin
    Load_Dungeon(entry_level, L);
 
    --intro message
-   L.Current_Screen.Message := "As you step from the stairs, they seal behind you trapping you in the Pits. You hear a voice: 'Hello Sailor! Welcome to the Pits. Your Lord Baal has committed you and your mortal shell to this place for his dread amusement. You are not the first and you are not the last. Perhaps there's a way out? Maybe you can make some friends. Just pray to your gods that your death is quick, painless and unexpected. But hey, I won't leave you completely out to dry. I'll show you how to move down here. Type 'y' and then 'enter' when you understand this message. Then type 'd' and then 'enter' to move to the east.'" & (606 .. Full_Screen_Amt => NUL);
+   L.Current_Screen.Message := "As you step from the stairs, they seal behind you trapping you in the Pits. You hear a voice: 'Hello Sailor! Welcome to the Pits. Your Lord Baal has committed you and your mortal shell to this place for his dread amusement. You are not the first and you are not the last. Perhaps there's a way out? Maybe you can make some friends. Just pray to your gods that your death is quick, painless and unexpected. But hey, I won't leave you completely out to dry. I'll show you how to move down here. Type 'y' and then 'enter' when you understand this message. Then type '6' and then 'enter' to move to the east.'" & (606 .. Full_Screen_Amt => NUL);
    --testing if message has right bounds:
    --Put_Line(Positive'Image(Full_Screen_Amt));
    --L.Current_Screen.Message := (1 .. Full_Screen_Amt => 'a');

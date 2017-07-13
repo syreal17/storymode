@@ -136,6 +136,23 @@ package body interpreter is
       end if;
    end Player_Attack;
    
+   procedure Loot_Monster(L : in out Level; X : Positive; Y :Positive) is
+      M_I : Positive := Get_Monster_Index(L, X, Y);
+      M : Monster := L.Current_Monsters(M_I);
+      S : String(1 .. Full_Screen_Amt);
+      N1: Positive;
+      N2: positive;
+   begin
+      N1 := 25 + M.Name_length + 1;
+      N2 := 3 + M.Inv(1).Name_length;
+      S :=
+       "Take what from the slain " & Get_Monster_Name_Str(M) & "?" & (N1 + 1 .. Screen_X_Length + 1 => ' ') &
+       "a. " & Get_Item_Name_Str(M.Inv(1)) & ((Screen_X_Length +1) + N2 + 1 .. (Screen_X_Length +1)*2 => ' ') &
+       ((Screen_X_Length+1)*2 + 1 .. Full_Screen_Amt => NUL);
+       
+      L.Current_Screen.Loot := S;
+   end Loot_Monster;
+   
    --Move: L: current level, X_Vec: X difference to apply to player position, Y_Vec: Y difference
    --      Moves player in specified direction, takes automatic action in same direction (opening doors, attacking monsters)
    procedure Move (L : in out Level; X_Vec : Integer; Y_Vec : Integer) is
@@ -158,11 +175,14 @@ package body interpreter is
             Open_Door(L, New_X, New_Y);
          elsif T_New = abbr_tiles(Monster_Tile) then
             Player_Attack(L, New_X, New_Y);
-         --TODO: add elsif here for Monster_Corpse, Loot_Monster
+         elsif T_New = abbr_tiles(Monster_Corpse) then
+            Loot_Monster(L, New_X, New_Y);
          end if;
       end if;
    end Move;
    
+   --Show_Stats: L:  current level. Displays all the stats of the current player.
+   --            A little suboptimial right now with all the hardcoded offsets
    procedure Show_Stats(L : in out Level) is
       S : String(1 .. Full_Screen_Amt);
       N1 : Positive;
@@ -175,6 +195,7 @@ package body interpreter is
       P : Player;
    begin
       P := L.Current_Player;
+      --The length of the strings
       N1 := 5 + Natural'Image(P.HP)'Length + 1 + Positive'Image(P.HP_Max)'Length;
       N2 := 5 + Positive'Image(P.XP)'Length;
       N3 := 14 + Positive'Image(P.PHYSICALITY)'Length;
@@ -182,7 +203,10 @@ package body interpreter is
       N5 := 14 + Positive'Image(P.BALANCE)'Length;
       N6 := 14 + Positive'Image(P.Armor)'Length;
       N7 := 5 + Natural'Image(P.LVL)'Length;
-      S := 
+      S :=
+       --unfortunately, we can't just insert a linefeed, because thats not how the render works.
+       --we must output a full line before it automatically inserts a new line feed.
+       --it's confusing that the string is one-dimensional, but it is output in 2 dimensions.
        "HP : " & Natural'Image(P.HP) & "/" & Positive'Image(P.HP_Max) & (N1 + 1 .. Screen_X_Length + 1 => ' ') &
        "XP : " & Positive'Image(P.XP) & (Screen_X_Length + 1 +N2 + 1 .. (Screen_X_Length + 1)*2 => ' ') &
        "LVL: " & Natural'Image(P.LVL) & ((Screen_X_Length + 1)*2 +N7 + 1 .. (Screen_X_Length + 1)*3 => ' ') &
@@ -191,8 +215,7 @@ package body interpreter is
        "BALANCE     : " & Positive'Image(P.BALANCE) & ((Screen_X_Length + 1)*5 +N5 + 1 .. (Screen_X_Length + 1)*6 => ' ') &
        "Armor       : " & Positive'Image(P.Armor) & ((Screen_X_Length + 1)*6 +N6 + 1 .. (Screen_X_Length + 1)*7 => ' ') &
        ((Screen_X_Length + 1)*7+1 .. Full_Screen_Amt => NUL);
-      --Put_Line(S'Last);
-      --Put_Line(
+       
       L.Current_Screen.Message := S;
    end Show_Stats;
    
