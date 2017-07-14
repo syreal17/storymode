@@ -18,10 +18,14 @@ package interpreter is
    --commands. What is entered by the player to take actions or acknowledge messages
    com_a : String(1 .. Screen_X_Length) :=
       (LC_A, others=>NUL);
+   com_b : String(1 .. Screen_X_Length) :=
+      (LC_B, others=>NUL);
+   com_c : String(1 .. Screen_X_Length) :=
+      (LC_C, others=>NUL);
    com_d : String(1 .. Screen_X_Length) :=
       (LC_D, others=>NUL);
-   com_w : String(1 .. Screen_X_Length) :=
-      (LC_W, others=>NUL);
+   com_e : String(1 .. Screen_X_Length) :=
+      (LC_E, others=>NUL);
    com_s : String(1 .. Screen_X_Length) :=
       (LC_S, others=>NUL);
    com_q : String(1 .. Screen_X_Length) :=
@@ -30,6 +34,8 @@ package interpreter is
       (LC_Y, others=>NUL);
    com_n : String(1 .. Screen_X_Length) :=
       (LC_N, others=>NUL);
+   com_z : String(1 .. Screen_X_Length) :=
+      (LC_Z, others=>NUL);
    com_8 : String(1 .. Screen_X_Length) :=
       ('8', others=>NUL);
    com_2 : String(1 .. Screen_X_Length) :=

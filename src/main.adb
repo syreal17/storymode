@@ -12,6 +12,7 @@ with plyr; use plyr;
 with interpreter; use interpreter;
 with trgr; use trgr;
 with mnstr; use mnstr;
+with itm; use itm;
 
 procedure Main is
 
@@ -49,7 +50,8 @@ procedure Main is
                      MYSTICISM  => 1,
                      BALANCE    => 1,
                      Armor      => 0,
-                     Alive      => True
+                     Alive      => True,
+                     Inv        => (noitem, others=>noitem)
                      --Melee      => 1,
                      --Manamancy  => 1,
                      --Sneak      => 1,
@@ -65,7 +67,9 @@ procedure Main is
                      X_Length   => Screen_X_Length,
                      Y_Length   => Screen_Y_Length,
                      Message    => (NUL, others=>NUL),
-                     Loot       => (NUL, others=>NUL)
+                     Loot       => (NUL, others=>NUL),
+                     Loot_X     => 1,
+                     Loot_Y     => 1
                      );
                   L.Current_Screen := S;
                elsif Identifier'Pos(I) <= Identifier'Pos(RM100001) then

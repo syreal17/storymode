@@ -47,7 +47,7 @@ package body camera is
          Put("Continue (y/n)? ");
          return Continue_Text;
       elsif K >= 2 then
-         Put("Take: ");
+         Put("Take (a/b/c/d/e/q/z): ");
          return Loot_Text;
       else
          Put("Action: ");

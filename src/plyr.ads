@@ -1,3 +1,5 @@
+with itm; use itm;
+
 package plyr is
 
   type Player is record
@@ -12,6 +14,7 @@ package plyr is
       BALANCE         : Positive;
       Armor           : Natural;
       Alive           : Boolean;
+      Inv             : Inventory;
       --Melee           : Positive;
       --Manamancy       : Positive;
       --Sneak           : Positive;

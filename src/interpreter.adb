@@ -142,13 +142,27 @@ package body interpreter is
       S : String(1 .. Full_Screen_Amt);
       N1: Positive;
       N2: positive;
+      N3: positive;
+      N4: positive;
+      N5: positive;
+      N6: positive;
    begin
+      L.Current_Screen.Loot_X := X;
+      L.Current_Screen.Loot_Y := Y;
       N1 := 25 + M.Name_length + 1;
       N2 := 3 + M.Inv(1).Name_length;
+      N3 := 3 + M.Inv(2).Name_length;
+      N4 := 3 + M.Inv(3).Name_length;
+      N5 := 3 + M.Inv(4).Name_length;
+      N6 := 3 + M.Inv(5).Name_length;
       S :=
        "Take what from the slain " & Get_Monster_Name_Str(M) & "?" & (N1 + 1 .. Screen_X_Length + 1 => ' ') &
        "a. " & Get_Item_Name_Str(M.Inv(1)) & ((Screen_X_Length +1) + N2 + 1 .. (Screen_X_Length +1)*2 => ' ') &
-       ((Screen_X_Length+1)*2 + 1 .. Full_Screen_Amt => NUL);
+       "b. " & Get_Item_Name_Str(M.Inv(2)) & ((Screen_X_Length +1)*2 + N3 + 1 .. (Screen_X_Length +1)*3 => ' ') &
+       "c. " & Get_Item_Name_Str(M.Inv(3)) & ((Screen_X_Length +1)*3 + N4 + 1 .. (Screen_X_Length +1)*4 => ' ') &
+       "d. " & Get_Item_Name_Str(M.Inv(4)) & ((Screen_X_Length +1)*4 + N5 + 1 .. (Screen_X_Length +1)*5 => ' ') &
+       "e. " & Get_Item_Name_Str(M.Inv(5)) & ((Screen_X_Length +1)*5 + N6 + 1 .. (Screen_X_Length +1)*6 => ' ') &
+       ((Screen_X_Length+1)*6 + 1 .. Full_Screen_Amt => NUL);
        
       L.Current_Screen.Loot := S;
    end Loot_Monster;
@@ -219,6 +233,36 @@ package body interpreter is
       L.Current_Screen.Message := S;
    end Show_Stats;
    
+   procedure Take(L : in out Level; Inv_I : Positive) is
+      M_I : Positive := Get_Monster_Index(L, L.Current_Screen.Loot_X, L.Current_Screen.Loot_Y);
+      M : Monster := L.Current_Monsters(M_I);
+      I : Item := M.Inv(Inv_I);
+      Can_Take_I : Boolean := False;
+   begin
+      --TODO: generalize for not just looting monsters
+      for J in 1 .. 5 loop
+         if L.Current_Player.Inv(J) = noitem then
+            L.Current_Player.Inv(J) := I;
+            L.Current_Monsters(M_I).Inv(Inv_I) := noitem;
+            Can_Take_I := True;
+            
+            --update screen with new monster inventory
+            Loot_Monster(L, L.Current_Screen.Loot_X, L.Current_Screen.Loot_Y);
+            exit;
+         end if;
+      end loop;
+      
+      if not Can_Take_I then
+         L.Current_Screen.Message := "Your inventory is full!" & (24 .. Full_Screen_Amt => NUL);
+         L.Current_Screen.Loot    := (NUL, others=>NUL);
+      end if;
+   end Take;
+   
+   procedure Dispose(L : in out Level) is
+   begin
+      L.Current_Screen.Loot := (NUL, others=>NUL);
+   end Dispose;
+   
    --Interpret: L : current level, S : Player entered string, IT : what input interpreter should be expecting
    --           Returns whether game loop should continue or not. Inteprets player input to do an action
    function Interpret (L : in out Level; S : String; IT : Input_Type) return Boolean is
@@ -252,11 +296,25 @@ package body interpreter is
             return False;
          end if;
       elsif IT = Continue_Text then
-         if S = com_y then
+         if S = com_y or S = com_q then
             --clearing message make dungeon action happen next
             L.Current_Screen.Message := (NUL, others=>NUL);
-         elsif S = com_q then
-            return False;
+         end if;
+      elsif IT = Loot_Text then
+         if S = com_q then
+            L.Current_Screen.Loot := (NUL, others=>NUL);
+         elsif S = com_a then
+            Take(L, 1);
+         elsif S = com_b then
+            Take(L, 2);
+         elsif S = com_c then
+            Take(L, 3);
+         elsif S = com_d then
+            Take(L, 4);
+         elsif S = com_e then
+            Take(L, 5);
+         elsif S = com_z then
+            Dispose(L);
          end if;
       end if;
       return True;

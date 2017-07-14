@@ -14,6 +14,8 @@ package scrn is
       Y_Position : Positive;
       Message    : String(1 .. Full_Screen_Amt );
       Loot       : String(1 .. Full_Screen_Amt);
+      Loot_X     : Positive;
+      Loot_Y     : Positive;
    end record; 
 
    --Append_Line_Message: Scrn: screen to change, S: string to append
