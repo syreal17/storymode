@@ -258,6 +258,7 @@ package body interpreter is
       end if;
    end Take;
    
+   --Dispose: L: current level. Disposes of the monster body you are looting.
    procedure Dispose(L : in out Level) is
       M_I : Positive;
    begin
@@ -265,6 +266,7 @@ package body interpreter is
       M_I := Get_Monster_Index(L, L.Current_Screen.Loot_X, L.Current_Screen.Loot_Y);
       L.Current_Monsters(M_I).X_Position := 1;
       L.Current_Monsters(M_I).Y_Position := 1;
+      L.Current_Monsters(M_I).Visible := False;
    end Dispose;
    
    --Interpret: L : current level, S : Player entered string, IT : what input interpreter should be expecting
